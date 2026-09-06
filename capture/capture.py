@@ -45,12 +45,17 @@ def capture_and_save(session_id=1):
     print(f"[{time.strftime('%H:%M:%S')}] Captured: {title}")
 
 if __name__ == "__main__":
-    init_db()  # make sure DB/tables exist
+    init_db()
     print("Starting capture loop. Press Ctrl+C to stop.")
     
+    MAX_CAPTURES = 20  # stop automatically after this many snapshots
+    count = 0
+    
     try:
-        while True:
+        while count < MAX_CAPTURES:
             capture_and_save(session_id=1)
-            time.sleep(15)  # capture every 15 seconds (shorter for testing; we'll widen this later)
+            count += 1
+            time.sleep(15)
+        print(f"\nReached {MAX_CAPTURES} captures. Stopping automatically.")
     except KeyboardInterrupt:
-        print("\nCapture stopped.")
+        print("\nCapture stopped manually.")
