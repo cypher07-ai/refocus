@@ -81,3 +81,33 @@ if __name__ == "__main__":
 
     away = calculate_total_away_time("coding")
     print(f"Time away from 'coding': {away} seconds")
+def get_last_session_snapshots(target_category, limit=50):
+    """
+    Finds the most recent contiguous block of snapshots belonging to
+    target_category, BEFORE the user switched away from it.
+    This is what powers the 'Resume' briefing - not just the last N snapshots,
+    but specifically the session that got interrupted.
+    """
+    snapshots = get_recent_snapshots(limit)
+    if not snapshots:
+        return []
+
+    # snapshots come back newest-first
+    snapshots = list(snapshots)
+
+    # Step 1: skip forward past any snapshots that are NOT target_category
+    # (i.e. skip the current interruption itself)
+    idx = 0
+    while idx < len(snapshots) and categorize_window(snapshots[idx][0]) != target_category:
+        idx += 1
+
+    if idx == len(snapshots):
+        return []  # never found this category in recent history
+
+    # Step 2: collect the contiguous run of target_category snapshots from here
+    session_snapshots = []
+    while idx < len(snapshots) and categorize_window(snapshots[idx][0]) == target_category:
+        session_snapshots.append(snapshots[idx])
+        idx += 1
+
+    return list(reversed(session_snapshots))  # oldest first, readable order
