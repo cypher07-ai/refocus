@@ -1,0 +1,6 @@
+﻿streamlit
+mss
+pygetwindow
+pyperclip
+pytesseract
+ollama
