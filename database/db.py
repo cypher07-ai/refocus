@@ -1,7 +1,8 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "refocus.db")
+# Always resolve to the project-root refocus.db (same file capture.py and tracker.py use)
+DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "refocus.db"))
 
 def init_db():
     """Creates the database and tables if they don't already exist."""
