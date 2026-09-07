@@ -149,37 +149,43 @@ if "show_weekly_report" not in st.session_state:
     st.session_state["show_weekly_report"] = False
 
 # -----------------------------------------------------------------------------
-# Streamlit App Configuration & Design Tokens
+# Streamlit App Configuration & Meta Design Tokens
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="REFOCUS // Work Context OS",
+    page_title="ReFocus — Work Context OS",
     page_icon="◬",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
+# Meta Commerce Design System (Stark White Canvas, Pill CTAs, 32px Cards, Montserrat)
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-    --bg-main: #0b0c10;
-    --bg-surface: #12141a;
-    --bg-subtle: #171922;
-    --bg-hover: #1e212d;
-    --border-base: #232733;
-    --border-strong: #33384a;
-    --text-primary: #f1f3f9;
-    --text-secondary: #949cb0;
-    --text-muted: #5e667e;
-    --accent: #ff542e;
-    --focus-green: #10b981;
-    --warn-amber: #f59e0b;
+    --canvas: #ffffff;
+    --surface-soft: #f1f4f7;
+    --ink-deep: #0a1317;
+    --ink: #1c1e21;
+    --charcoal: #444950;
+    --slate: #4b4c4f;
+    --steel: #5d6c7b;
+    --stone: #8595a4;
+    --hairline: #ced0d4;
+    --hairline-soft: #dee3e9;
+    --ink-button: #000000;
+    --primary: #0064e0;
+    --primary-deep: #0457cb;
+    --success: #31a24c;
+    --warning: #f2a918;
+    --critical: #e41e3f;
 }
 
 html, body, [class*="css"], .stMarkdown, .stText {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    color: var(--text-primary);
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
 }
 
 code, kbd, samp, pre {
@@ -187,172 +193,204 @@ code, kbd, samp, pre {
 }
 
 .stApp {
-    background-color: var(--bg-main) !important;
-    color: var(--text-primary) !important;
+    background-color: var(--canvas) !important;
+    color: var(--ink) !important;
 }
 
 header[data-testid="stHeader"] {
     background: transparent !important;
     border-bottom: none !important;
 }
+
 .main .block-container {
-    padding-top: 1.8rem !important;
+    padding-top: 1.5rem !important;
     padding-bottom: 4rem !important;
-    max-width: 1280px !important;
+    max-width: 1240px !important;
 }
 
-.rf-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-base);
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+/* Meta Card System */
+.meta-card {
+    background-color: var(--canvas);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 32px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(20, 22, 26, 0.04);
 }
 
-.rf-card-header {
+.meta-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-base);
-    padding-bottom: 14px;
-    margin-bottom: 18px;
+    border-bottom: 1px solid var(--hairline-soft);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
 }
 
-.rf-card-title {
-    font-size: 13px;
+.meta-card-title {
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
+    letter-spacing: -0.14px;
+    color: var(--ink-deep);
     display: flex;
     align-items: center;
     gap: 8px;
+    text-transform: uppercase;
 }
 
-.rf-badge {
+/* Meta Pill Badges */
+.meta-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-.rf-badge-active {
-    background-color: rgba(16, 185, 129, 0.12);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-.rf-badge-idle {
-    background-color: rgba(245, 158, 11, 0.12);
-    color: #fbbf24;
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-.rf-badge-paused {
-    background-color: rgba(94, 102, 126, 0.15);
-    color: #949cb0;
-    border: 1px solid var(--border-base);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.14px;
 }
 
-.rf-metric-box {
-    background-color: var(--bg-subtle);
-    border: 1px solid var(--border-base);
-    border-radius: 6px;
-    padding: 16px 18px;
+.meta-badge-active {
+    background-color: rgba(49, 162, 76, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(49, 162, 76, 0.25);
 }
-.rf-metric-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 6px;
+
+.meta-badge-idle {
+    background-color: rgba(242, 169, 24, 0.12);
+    color: #c98008;
+    border: 1px solid rgba(242, 169, 24, 0.3);
 }
-.rf-metric-val {
-    font-size: 24px;
-    font-weight: 800;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-primary);
-    line-height: 1.1;
+
+.meta-badge-paused {
+    background-color: var(--surface-soft);
+    color: var(--steel);
+    border: 1px solid var(--hairline-soft);
 }
-.rf-metric-sub {
+
+/* Meta Metric Tiles */
+.meta-metric-tile {
+    background-color: var(--surface-soft);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 16px;
+    padding: 20px 22px;
+}
+
+.meta-metric-label {
     font-size: 12px;
-    color: var(--text-secondary);
+    font-weight: 700;
+    letter-spacing: -0.14px;
+    color: var(--steel);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.meta-metric-val {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: var(--ink-deep);
+    line-height: 1.15;
+}
+
+.meta-metric-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--charcoal);
     margin-top: 6px;
 }
 
+/* Meta Pill Buttons */
 .stButton > button {
-    background-color: var(--text-primary) !important;
-    color: var(--bg-main) !important;
-    border: 1px solid var(--text-primary) !important;
-    border-radius: 6px !important;
+    background-color: var(--ink-button) !important;
+    color: var(--canvas) !important;
+    border: none !important;
+    border-radius: 100px !important;
     font-weight: 700 !important;
-    font-size: 13px !important;
-    letter-spacing: 0.02em !important;
-    padding: 9px 20px !important;
-    transition: all 0.12s ease-in-out !important;
-}
-.stButton > button:hover {
-    background-color: #ffffff !important;
-    border-color: #ffffff !important;
-    transform: translateY(-1px);
+    font-size: 14px !important;
+    letter-spacing: -0.14px !important;
+    padding: 12px 28px !important;
+    transition: background-color 0.15s ease !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
 }
 
+.stButton > button:hover {
+    background-color: var(--charcoal) !important;
+    color: var(--canvas) !important;
+}
+
+/* Commerce Buy-CTA Button Override (Cobalt Blue) */
+.meta-buy-btn .stButton > button {
+    background-color: var(--primary) !important;
+    color: var(--canvas) !important;
+}
+
+.meta-buy-btn .stButton > button:hover {
+    background-color: var(--primary-deep) !important;
+}
+
+/* Streamlit Overrides for Meta Style */
 [data-testid="stExpander"] {
-    background-color: var(--bg-subtle) !important;
-    border: 1px solid var(--border-base) !important;
-    border-radius: 6px !important;
-    margin-top: 14px;
+    background-color: var(--surface-soft) !important;
+    border: 1px solid var(--hairline-soft) !important;
+    border-radius: 16px !important;
+    margin-top: 16px;
 }
+
 [data-testid="stExpander"] details summary {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
-    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--ink-deep) !important;
+    letter-spacing: -0.14px !important;
 }
+
 code {
-    background-color: #0e0f14 !important;
-    border: 1px solid var(--border-base) !important;
-    border-radius: 4px !important;
-    padding: 2px 6px !important;
-    color: #e2e8f0 !important;
+    background-color: var(--surface-soft) !important;
+    border: 1px solid var(--hairline-soft) !important;
+    border-radius: 8px !important;
+    padding: 3px 8px !important;
+    color: var(--ink-deep) !important;
 }
+
 .stChatMessage {
-    background-color: var(--bg-surface) !important;
-    border: 1px solid var(--border-base) !important;
-    border-radius: 6px !important;
-    padding: 14px !important;
-    margin-bottom: 10px !important;
+    background-color: var(--canvas) !important;
+    border: 1px solid var(--hairline-soft) !important;
+    border-radius: 16px !important;
+    padding: 16px 20px !important;
+    margin-bottom: 12px !important;
 }
+
 [data-testid="stChatInput"] textarea {
-    background-color: var(--bg-surface) !important;
-    border: 1px solid var(--border-base) !important;
-    border-radius: 6px !important;
-    color: var(--text-primary) !important;
+    background-color: var(--canvas) !important;
+    border: 1px solid var(--hairline) !important;
+    border-radius: 100px !important;
+    padding: 12px 24px !important;
+    color: var(--ink) !important;
 }
+
+[data-testid="stChatInput"] textarea:focus {
+    border-color: var(--primary) !important;
+}
+
 hr {
-    border-color: var(--border-base) !important;
-    margin: 24px 0 !important;
+    border-color: var(--hairline-soft) !important;
+    margin: 32px 0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# System Command Bar / Header
+# System Command Bar / Navigation Header (Meta Style)
 # -----------------------------------------------------------------------------
 def render_command_bar():
     col_logo, col_stat, col_ctrl = st.columns([1.8, 2.2, 1.2], gap="medium")
     
     with col_logo:
         st.markdown("""
-        <div style="display: flex; align-items: baseline; gap: 10px;">
-            <span style="font-size: 20px; font-weight: 900; letter-spacing: -0.04em; color: #ffffff;">REFOCUS</span>
-            <span style="font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: #5e667e; letter-spacing: 0.1em;">// CONTEXT RECOVERY OS</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #0a1317;">ReFocus</span>
+            <span style="display: inline-block; width: 1px; height: 18px; background-color: #dee3e9;"></span>
+            <span style="font-size: 13px; font-weight: 500; color: #5d6c7b; letter-spacing: -0.14px;">Work Context OS</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -368,26 +406,26 @@ def render_live_system_status():
     is_paused = st.session_state.get("privacy_mode", False)
 
     if is_paused:
-        status_html = '<span class="rf-badge rf-badge-paused">○ MONITORING PAUSED</span>'
+        status_html = '<span class="meta-badge meta-badge-paused">○ MONITORING PAUSED</span>'
         idle_info = "Snapshots suspended"
     elif idle_secs < INACTIVITY_THRESHOLD:
-        status_html = '<span class="rf-badge rf-badge-active">● ACTIVE // TRACKING</span>'
+        status_html = '<span class="meta-badge meta-badge-active">● ACTIVE TRACKING</span>'
         idle_info = f"Idle: <code>{idle_secs}s</code> / <code>{INACTIVITY_THRESHOLD}s</code>"
     else:
         away_m = idle_secs // 60
         away_s = idle_secs % 60
-        status_html = '<span class="rf-badge rf-badge-idle">▲ INTERRUPTED</span>'
+        status_html = '<span class="meta-badge meta-badge-idle">▲ INTERRUPTED</span>'
         idle_info = f"Away: <code>{away_m}m {away_s}s</code>"
 
     st.markdown(f"""
     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 2px;">
         {status_html}
-        <span style="font-size: 12px; color: #949cb0;">{idle_info}</span>
+        <span style="font-size: 13px; color: #5d6c7b;">{idle_info}</span>
     </div>
     """, unsafe_allow_html=True)
 
 render_command_bar()
-st.markdown("<hr style='margin: 14px 0 20px 0;'/>", unsafe_allow_html=True)
+st.markdown("<hr style='margin: 16px 0 28px 0;'/>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # Main Operational Panels (Left: Recovery Hero | Right: Daily Telemetry)
@@ -405,38 +443,40 @@ with left_col:
         away_secs_rem = int(away_seconds) % 60
 
         st.markdown(f"""
-        <div class="rf-card" style="border-left: 3px solid var(--accent);">
-            <div class="rf-card-header">
-                <div class="rf-card-title">
-                    <span>INTERRUPTED WORKSPACE HANDOFF</span>
+        <div class="meta-card" style="border-top: 4px solid var(--primary);">
+            <div class="meta-card-header">
+                <div class="meta-card-title">
+                    <span>Interrupted Workspace Handoff</span>
                 </div>
-                <span class="rf-badge rf-badge-idle">DRIFT DETECTED</span>
+                <span class="meta-badge meta-badge-idle">DRIFT DETECTED</span>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
-                <div class="rf-metric-box">
-                    <div class="rf-metric-label">Target Recovery Workspace</div>
-                    <div class="rf-metric-val" style="font-size: 20px; color: #ffffff;">{previous_category.upper()}</div>
-                    <div class="rf-metric-sub">Last active coding state</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div class="meta-metric-tile">
+                    <div class="meta-metric-label">Target Recovery Workspace</div>
+                    <div class="meta-metric-val" style="font-size: 22px;">{previous_category.upper()}</div>
+                    <div class="meta-metric-sub">Last active workspace state</div>
                 </div>
-                <div class="rf-metric-box">
-                    <div class="rf-metric-label">Duration Since Last Interaction</div>
-                    <div class="rf-metric-val" style="font-size: 20px; color: #ff542e;">{away_minutes}m {away_secs_rem}s</div>
-                    <div class="rf-metric-sub">Interrupted by: {state['current_category']}</div>
+                <div class="meta-metric-tile">
+                    <div class="meta-metric-label">Time Since Interaction</div>
+                    <div class="meta-metric-val" style="font-size: 22px; color: #0064e0;">{away_minutes}m {away_secs_rem}s</div>
+                    <div class="meta-metric-sub">Interrupted by: {state['current_category']}</div>
                 </div>
             </div>
-            <div style="font-size: 13px; color: #949cb0; line-height: 1.5; margin-bottom: 16px;">
+            <div style="font-size: 14px; color: #444950; line-height: 1.55; margin-bottom: 20px;">
                 Your workspace state was captured right before the interruption. Click below to reconstruct your cognitive context, open files, and next planned action.
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        btn_col, _ = st.columns([1.4, 1.0])
+        btn_col, _ = st.columns([1.6, 1.0])
         with btn_col:
+            st.markdown('<div class="meta-buy-btn">', unsafe_allow_html=True)
             trigger_recovery = st.button(
-                f"↳ Reconstruct Context & Resume in {previous_category.upper()}",
+                f"Reconstruct Context & Resume in {previous_category.upper()}",
                 use_container_width=True,
                 type="primary"
             )
+            st.markdown('</div>', unsafe_allow_html=True)
 
         if trigger_recovery:
             with st.spinner("Synthesizing context dossier from active window telemetry..."):
@@ -452,28 +492,28 @@ with left_col:
         if st.session_state["briefing_cache"]:
             cache = st.session_state["briefing_cache"]
             st.markdown(f"""
-            <div class="rf-card" style="margin-top: 18px;">
-                <div class="rf-card-header">
-                    <div class="rf-card-title">
-                        <span>EXECUTIVE RECOVERY BRIEFING // {cache['category'].upper()}</span>
+            <div class="meta-card" style="margin-top: 24px;">
+                <div class="meta-card-header">
+                    <div class="meta-card-title">
+                        <span>Executive Recovery Briefing — {cache['category'].upper()}</span>
                     </div>
-                    <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e667e;">GENERATED AT {cache['timestamp']}</span>
+                    <span style="font-size: 12px; color: #8595a4;">Generated at {cache['timestamp']}</span>
                 </div>
-                <div style="font-size: 14px; line-height: 1.65; color: #e2e8f0;">
+                <div style="font-size: 15px; line-height: 1.65; color: #1c1e21;">
             """, unsafe_allow_html=True)
             
             st.markdown(cache["briefing"])
             st.markdown("</div>", unsafe_allow_html=True)
 
-            with st.expander("VIEW RAW EVIDENCE & OCR LOGS"):
+            with st.expander("View Raw Evidence & OCR Logs"):
                 if cache["snapshots"]:
                     for idx, (w_title, ocr_data, ts) in enumerate(cache["snapshots"][-4:]):
                         ts_str = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
                         st.markdown(f"""
-                        <div style="border-bottom: 1px solid var(--border-base); padding: 10px 0;">
-                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #949cb0;">
+                        <div style="border-bottom: 1px solid #dee3e9; padding: 12px 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #1c1e21;">
                                 <span>[{idx+1}] {w_title}</span>
-                                <span style="font-family: 'JetBrains Mono', monospace; color: #5e667e;">{ts_str}</span>
+                                <span style="font-family: 'JetBrains Mono', monospace; color: #8595a4; font-size: 12px;">{ts_str}</span>
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
@@ -488,24 +528,24 @@ with left_col:
         current_win = state.get("current_window", "Waiting for active input...") if state.get("status") == "ok" else "No telemetry recorded"
         
         st.markdown(f"""
-        <div class="rf-card">
-            <div class="rf-card-header">
-                <div class="rf-card-title">
-                    <span>CURRENT WORKSPACE TELEMETRY</span>
+        <div class="meta-card">
+            <div class="meta-card-header">
+                <div class="meta-card-title">
+                    <span>Current Workspace Telemetry</span>
                 </div>
-                <span class="rf-badge rf-badge-active">SYNCHRONIZED</span>
+                <span class="meta-badge meta-badge-active">SYNCHRONIZED</span>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
-                <div class="rf-metric-box">
-                    <div class="rf-metric-label">Active Application</div>
-                    <div class="rf-metric-val" style="font-size: 22px;">{current_app}</div>
-                    <div class="rf-metric-sub" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                <div class="meta-metric-tile">
+                    <div class="meta-metric-label">Active Application</div>
+                    <div class="meta-metric-val" style="font-size: 24px;">{current_app}</div>
+                    <div class="meta-metric-sub" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                         {current_win}
                     </div>
                 </div>
             </div>
-            <div style="margin-top: 18px; font-size: 12px; color: #717888; line-height: 1.5;">
-                Zero drift detected. ReFocus is actively monitoring your workflow. When you switch contexts or step away for >= 3 minutes, your recovery handoff will stage here automatically.
+            <div style="margin-top: 20px; font-size: 14px; color: #5d6c7b; line-height: 1.55;">
+                Zero drift detected. ReFocus is actively monitoring your workflow in the background. When you switch contexts or step away for ≥ 3 minutes, your recovery handoff will stage here automatically.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -513,12 +553,12 @@ with left_col:
 with right_col:
     # --- RIGHT: DAILY TELEMETRY ---
     st.markdown("""
-    <div class="rf-card">
-        <div class="rf-card-header">
-            <div class="rf-card-title">
-                <span>DAILY FOCUS TELEMETRY</span>
+    <div class="meta-card">
+        <div class="meta-card-header">
+            <div class="meta-card-title">
+                <span>Daily Focus Telemetry</span>
             </div>
-            <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e667e;">TODAY</span>
+            <span style="font-size: 12px; font-weight: 700; color: #8595a4;">TODAY</span>
         </div>
     """, unsafe_allow_html=True)
 
@@ -532,15 +572,15 @@ with right_col:
 
     score_delta = round(focus_score - yesterday_stats.get("focus_score", 0), 1)
     delta_symbol = "▲" if score_delta >= 0 else "▼"
-    delta_color = "#10b981" if score_delta >= 0 else "#f43f5e"
+    delta_color = "#31a24c" if score_delta >= 0 else "#e41e3f"
 
     m_col1, m_col2 = st.columns(2)
     with m_col1:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Focus Efficiency</div>
-            <div class="rf-metric-val">{focus_score}%</div>
-            <div class="rf-metric-sub" style="color: {delta_color}; font-weight: 600;">
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Focus Efficiency</div>
+            <div class="meta-metric-val">{focus_score}%</div>
+            <div class="meta-metric-sub" style="color: {delta_color}; font-weight: 700;">
                 {delta_symbol} {abs(score_delta)}% vs yesterday
             </div>
         </div>
@@ -548,31 +588,31 @@ with right_col:
 
     with m_col2:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Deep Work Time</div>
-            <div class="rf-metric-val">{focus_min_today}m</div>
-            <div class="rf-metric-sub">Coding duration</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Deep Work Time</div>
+            <div class="meta-metric-val">{focus_min_today}m</div>
+            <div class="meta-metric-sub">Focus duration</div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
     m_col3, m_col4 = st.columns(2)
     with m_col3:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Context Switches</div>
-            <div class="rf-metric-val" style="color: #f59e0b;">{interruptions}</div>
-            <div class="rf-metric-sub">Interruptions logged</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Context Switches</div>
+            <div class="meta-metric-val" style="color: #f2a918;">{interruptions}</div>
+            <div class="meta-metric-sub">Drift events logged</div>
         </div>
         """, unsafe_allow_html=True)
 
     with m_col4:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Snapshots Logged</div>
-            <div class="rf-metric-val">{total_snaps}</div>
-            <div class="rf-metric-sub">Telemetry records</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Snapshots Logged</div>
+            <div class="meta-metric-val">{total_snaps}</div>
+            <div class="meta-metric-sub">Telemetry records</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -583,14 +623,14 @@ with right_col:
 # -----------------------------------------------------------------------------
 st.markdown("<hr/>", unsafe_allow_html=True)
 
-col_rep_head, col_rep_btn = st.columns([2.5, 1.0], gap="medium")
+col_rep_head, col_rep_btn = st.columns([2.5, 1.2], gap="medium")
 
 with col_rep_head:
     st.markdown("""
-    <div style="font-size: 14px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #f1f3f9;">
+    <div style="font-size: 18px; font-weight: 700; color: #0a1317; letter-spacing: -0.3px;">
         7-Day Executive Focus Audit
     </div>
-    <div style="font-size: 12px; color: #949cb0; margin-top: 2px;">
+    <div style="font-size: 14px; color: #5d6c7b; margin-top: 2px;">
         Compile multi-day cognitive load, context switching velocity, and deep work trends.
     </div>
     """, unsafe_allow_html=True)
@@ -603,8 +643,8 @@ if st.session_state["show_weekly_report"]:
     weekly_data = get_weekly_summary()
     
     st.markdown("""
-    <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #34d399; margin: 16px 0 12px 0;">
-        ● EXECUTIVE 7-DAY PRODUCTIVITY DOSSIER
+    <div style="font-size: 14px; font-weight: 700; color: #31a24c; margin: 20px 0 14px 0; text-transform: uppercase; letter-spacing: -0.14px;">
+        ● Executive 7-Day Productivity Dossier
     </div>
     """, unsafe_allow_html=True)
     
@@ -612,39 +652,39 @@ if st.session_state["show_weekly_report"]:
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">7-Day Deep Work</div>
-            <div class="rf-metric-val" style="color: #34d399;">{weekly_data['total_focus_hours']}h</div>
-            <div class="rf-metric-sub">Total coding duration</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">7-Day Deep Work</div>
+            <div class="meta-metric-val" style="color: #0064e0;">{weekly_data['total_focus_hours']}h</div>
+            <div class="meta-metric-sub">Total focus duration</div>
         </div>
         """, unsafe_allow_html=True)
     with kpi2:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Avg Focus Score</div>
-            <div class="rf-metric-val">{weekly_data['avg_focus_score']}%</div>
-            <div class="rf-metric-sub">Weighted daily efficiency</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Avg Focus Score</div>
+            <div class="meta-metric-val">{weekly_data['avg_focus_score']}%</div>
+            <div class="meta-metric-sub">Weighted daily efficiency</div>
         </div>
         """, unsafe_allow_html=True)
     with kpi3:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Total Drift Events</div>
-            <div class="rf-metric-val" style="color: #f59e0b;">{weekly_data['total_interruptions']}</div>
-            <div class="rf-metric-sub">Context switches logged</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Total Drift Events</div>
+            <div class="meta-metric-val" style="color: #f2a918;">{weekly_data['total_interruptions']}</div>
+            <div class="meta-metric-sub">Context switches logged</div>
         </div>
         """, unsafe_allow_html=True)
     with kpi4:
         st.markdown(f"""
-        <div class="rf-metric-box">
-            <div class="rf-metric-label">Peak Performance</div>
-            <div class="rf-metric-val" style="font-size: 16px; margin-top: 4px;">{weekly_data['best_day']}</div>
-            <div class="rf-metric-sub">{weekly_data['best_day_hours']}h deep work logged</div>
+        <div class="meta-metric-tile">
+            <div class="meta-metric-label">Peak Performance</div>
+            <div class="meta-metric-val" style="font-size: 18px; margin-top: 4px;">{weekly_data['best_day']}</div>
+            <div class="meta-metric-sub">{weekly_data['best_day_hours']}h deep work logged</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5e667e; margin: 18px 0 10px 0;">
+    <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #5d6c7b; margin: 24px 0 12px 0; letter-spacing: -0.14px;">
         Daily Focus Velocity & Interruption Breakdown
     </div>
     """, unsafe_allow_html=True)
@@ -653,25 +693,25 @@ if st.session_state["show_weekly_report"]:
     day_cols = st.columns(7)
     for idx, d in enumerate(weekly_data["days"]):
         with day_cols[idx]:
-            score_color = "#34d399" if d['score'] >= 60 else "#f59e0b"
+            score_color = "#31a24c" if d['score'] >= 60 else "#f2a918"
             st.markdown(f"""
-            <div class="rf-metric-box" style="text-align: center; padding: 12px 6px;">
-                <div style="font-size: 11px; font-weight: 700; color: #949cb0;">{d['short_day']}</div>
-                <div style="font-size: 18px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: {score_color}; margin: 6px 0;">
+            <div class="meta-metric-tile" style="text-align: center; padding: 14px 8px;">
+                <div style="font-size: 12px; font-weight: 700; color: #1c1e21;">{d['short_day']}</div>
+                <div style="font-size: 20px; font-weight: 700; color: {score_color}; margin: 8px 0 4px 0;">
                     {d['score']}%
                 </div>
-                <div style="font-size: 10px; color: #5e667e;">{d['focus_hours']}h work</div>
-                <div style="font-size: 10px; color: #f59e0b; margin-top: 2px;">{d['interruptions']} drifts</div>
+                <div style="font-size: 11px; color: #5d6c7b;">{d['focus_hours']}h work</div>
+                <div style="font-size: 11px; color: #f2a918; margin-top: 2px;">{d['interruptions']} drifts</div>
             </div>
             """, unsafe_allow_html=True)
 
     # Executive AI Retrospective Card
     st.markdown(f"""
-    <div style="background-color: #171922; border: 1px solid #232733; border-radius: 6px; padding: 16px 20px; margin-top: 18px;">
-        <div style="font-size: 12px; font-weight: 700; color: #f1f3f9; margin-bottom: 6px;">
-            AI EXECUTIVE RETROSPECTIVE
+    <div style="background-color: #f1f4f7; border: 1px solid #dee3e9; border-radius: 24px; padding: 24px; margin-top: 24px;">
+        <div style="font-size: 14px; font-weight: 700; color: #0a1317; margin-bottom: 8px;">
+            AI Executive Retrospective
         </div>
-        <div style="font-size: 13px; color: #949cb0; line-height: 1.6;">
+        <div style="font-size: 14px; color: #444950; line-height: 1.6;">
             Over the past 7 days, you maintained a <b>{weekly_data['avg_focus_score']}% focus efficiency</b> across <b>{weekly_data['total_focus_hours']} hours</b> of deep work. 
             Your strongest flow state occurred on <b>{weekly_data['best_day']}</b> ({weekly_data['best_day_hours']} hours). 
             Primary drift vector was mid-afternoon context switching between IDE and browser documentation.
@@ -680,19 +720,19 @@ if st.session_state["show_weekly_report"]:
     """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# ACTIVITY INQUIRY COPILOT (Command / Terminal Chat Interface)
+# ACTIVITY INQUIRY COPILOT (Command Chat Interface)
 # -----------------------------------------------------------------------------
 st.markdown("<hr/>", unsafe_allow_html=True)
 
 st.markdown("""
-<div class="rf-card">
-    <div class="rf-card-header">
-        <div class="rf-card-title">
-            <span>ACTIVITY QUERY INTERFACE // COPILOT</span>
+<div class="meta-card">
+    <div class="meta-card-header">
+        <div class="meta-card-title">
+            <span>Activity Query Interface — Copilot</span>
         </div>
-        <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e667e;">LOCAL LLM</span>
+        <span style="font-size: 12px; font-weight: 700; color: #8595a4;">LOCAL LLM</span>
     </div>
-    <div style="font-size: 13px; color: #949cb0; margin-bottom: 16px;">
+    <div style="font-size: 14px; color: #5d6c7b; margin-bottom: 20px;">
         Query your daily workspace history, focus drift events, or draft handoff notes using local intelligence.
     </div>
 """, unsafe_allow_html=True)
@@ -718,11 +758,11 @@ if user_query:
 st.markdown("</div>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# Footer
+# Footer (Meta Style)
 # -----------------------------------------------------------------------------
 st.markdown("""
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 24px 0 12px 0; border-top: 1px solid var(--border-base); font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e667e;">
-    <span>REFOCUS ENGINE // PRIVATE ON-DEVICE TELEMETRY</span>
-    <span>ZERO CLOUD TRANSMISSION // AIR-GAPPED</span>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 32px 0 16px 0; border-top: 1px solid #dee3e9; font-size: 12px; color: #8595a4;">
+    <span>ReFocus Engine — Private On-Device Telemetry</span>
+    <span>Zero Cloud Transmission // Air-Gapped</span>
 </div>
 """, unsafe_allow_html=True)
