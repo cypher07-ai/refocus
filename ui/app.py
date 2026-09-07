@@ -85,3 +85,10 @@ else:
 
 st.divider()
 st.caption("Refocus Copilot runs entirely locally. Nothing leaves your device.")
+from sessions.session_engine import (
+    detect_current_state,
+    time_since_last_category,
+    get_last_session_snapshots,
+    get_previous_category,
+    get_daily_stats,
+)
