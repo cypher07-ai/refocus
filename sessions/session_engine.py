@@ -147,3 +147,47 @@ if __name__ == "__main__":
     print(state)
     away = calculate_total_away_time("coding")
     print(f"Time away from 'coding': {away} seconds")
+def get_weekly_summary():
+    """Compiles aggregated performance across the last 7 days."""
+    days = []
+    total_focus_sec = 0
+    total_switches = 0
+    day_scores = []
+    
+    for i in range(6, -1, -1):
+        stats = get_daily_stats(days_ago=i)
+        day_date = datetime.datetime.now() - datetime.timedelta(days=i)
+        day_label = day_date.strftime("%a (%b %d)")
+        
+        focus_mins = round(stats["focus_seconds"] / 60, 1)
+        score = stats["focus_score"]
+        switches = stats["interruptions"]
+        
+        total_focus_sec += stats["focus_seconds"]
+        total_switches += switches
+        if score > 0:
+            day_scores.append(score)
+            
+        days.append({
+            "day": day_label,
+            "short_day": day_date.strftime("%a"),
+            "focus_mins": focus_mins,
+            "focus_hours": round(focus_mins / 60, 1),
+            "score": score,
+            "interruptions": switches
+        })
+        
+    avg_score = round(sum(day_scores) / len(day_scores), 1) if day_scores else 0
+    total_focus_hours = round(total_focus_sec / 3600, 1)
+    
+    # Identify most productive day
+    best_day = max(days, key=lambda d: d["focus_mins"]) if days else None
+    
+    return {
+        "days": days,
+        "avg_focus_score": avg_score,
+        "total_focus_hours": total_focus_hours,
+        "total_interruptions": total_switches,
+        "best_day": best_day["day"] if best_day else "N/A",
+        "best_day_hours": best_day["focus_hours"] if best_day else 0
+    }
